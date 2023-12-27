@@ -1,0 +1,22 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src/core",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "classValidatorShim": true,
+          "introspectComments": true,
+          "dtoFileNameSuffix": [
+            ".dto.ts",
+            ".entity.ts"
+          ]
+        }
+      }
+    ],
+    "assets": [
+      "public/**/*"
+    ]
+  }
+}
