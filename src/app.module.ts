@@ -6,7 +6,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Connection as MongooseConnection } from 'mongoose';
 import { mongooseToJson } from './common/mongoosePlugins/toJson';
 import { RestaurantModule } from './core/restaurant/restaurant.module';
+import { AuthModule } from './core/auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, RolesGuard } from 'core/auth/guards';
 
+const provideGlobalGuards = [
+  {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
+  },
+
+  {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },
+];
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,8 +49,9 @@ import { RestaurantModule } from './core/restaurant/restaurant.module';
       inject: [ConfigService],
     }),
     RestaurantModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ...provideGlobalGuards],
 })
 export class AppModule {}
