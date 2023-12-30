@@ -1,6 +1,28 @@
 version: "3.7"
 
 services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    restart: always
+    environment:
+      # MONGO_INITDB_ROOT_USERNAME: admin
+      # MONGO_INITDB_ROOT_PASSWORD: admin
+      - "MONGO_INITDB_DATABASE:testing_db"
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - ./mongo-seed:/mongo-seed
+    # command:
+    #   /mongo-seed/import.sh
+  mongo_seed:
+    image: mongo:4.4
+    links:
+      - mongodb
+    volumes:
+      - ./mongo-seed:/mongo-seed
+    command:
+      /mongo-seed/import.sh
   interview-testing:
     build:
       context: ./
@@ -14,3 +36,6 @@ services:
       - "NODE_ENV=production"
     ports:
       - 6868:6868
+    depends_on:
+      - mongodb
+
