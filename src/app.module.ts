@@ -7,9 +7,10 @@ import { Connection as MongooseConnection } from 'mongoose';
 import { mongooseToJson } from './common/mongoosePlugins/toJson';
 import { RestaurantModule } from './core/restaurant/restaurant.module';
 import { AuthModule } from './core/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from 'core/auth/guards';
 import { LoggerMiddleware } from 'middleware/logger.middleware';
+import { GlobalExceptionFilter } from 'exception-filter/global-exeption.filter';
 
 const provideGlobalGuards = [
   {
@@ -53,7 +54,15 @@ const provideGlobalGuards = [
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, Logger, ...provideGlobalGuards],
+  providers: [
+    AppService,
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
+    ...provideGlobalGuards,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
