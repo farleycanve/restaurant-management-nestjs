@@ -24,5 +24,7 @@ services:
     container_name: interview-testing
     environment:
       - "NODE_ENV=production"
+    ports:
+      - 6868:6868
     depends_on:
       - mongodb
