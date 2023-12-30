@@ -1,12 +1,19 @@
-# Getting Started
+# Getting Started (local)
 
 To get started, you need Docker, docker-compose and git setup on your machine. For Docker basics and best practices. Refer Docker [documentation](http://docs.docker.com).
+Please input mongodb address to .env.development (field: MONGO_URI)
+
+```sh
+git clone https://github.com/farleycanve/testing-be.git
+cd testing-be
+
+```
+
 After that, clone this repo:
 
 ```sh
-git https://github.com/farleycanve/testing-be.git
-cd testing-be
-docker-compose  up -d --force-recreate --no-deps --build
+yarn
+yarn start:dev
 ```
 
 Wait for 1 minutes for app running on 6868.
