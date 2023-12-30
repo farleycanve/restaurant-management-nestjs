@@ -16,6 +16,6 @@ yarn
 yarn start:dev
 ```
 
-Wait for 1 minutes for app running on 6868.
+Wait for 1 minutes for app running on http://localhost:6868.
 
 View [Demo](https://interview.naltaphy.tech).
