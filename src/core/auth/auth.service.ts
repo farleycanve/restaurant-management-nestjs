@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/auth.entity';
@@ -12,15 +13,30 @@ import { hash, plainMatchesHash } from 'common/utils/hashing';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from 'common/constants/roles';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
   constructor(
     @InjectModel('User')
     private readonly userModel: Model<UserDocument>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
-
+  onModuleInit() {
+    this.initAccountAdmin();
+  }
+  async initAccountAdmin() {
+    const result = await this.userModel.findOne({ username: 'admin' });
+    if (!result) {
+      this.create({
+        username: this.configService.get<string>('ROOT_USER'),
+        password: this.configService.get<string>('ROOT_PASSWORD'),
+        role: Role.Manager,
+      });
+    }
+  }
   async create(createUserDto: CreateUserDto) {
     const { username, password } = createUserDto;
     const result = await this.userModel.findOne({ username });
