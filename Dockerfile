@@ -1,5 +1,5 @@
 #Development stage
-FROM node:20 as base
+FROM node:18 as base
 
 WORKDIR /app
 
