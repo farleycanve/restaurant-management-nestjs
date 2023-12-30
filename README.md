@@ -19,3 +19,4 @@ yarn start:dev
 Wait for 1 minutes for app running on http://localhost:6868.
 
 View [Demo](https://interview.naltaphy.tech).
+username: admin password: admin
