@@ -19,8 +19,8 @@ export function configSwagger(app: INestApplication) {
   const serverDescription = env === 'beta' ? 'Beta server' : 'Local server';
 
   const config = new DocumentBuilder()
-    .setTitle('Job-Posting API')
-    .setDescription('RESTful API for use with Job Posting')
+    .setTitle('Interview API')
+    .setDescription('RESTful API for use with Interview')
     .setVersion('2.0')
     .addSecurity('token', { type: 'http', scheme: 'bearer' })
     .addServer(serverUrl, serverDescription, {

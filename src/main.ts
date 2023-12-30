@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useStaticAssets(path.join(__dirname, '..', 'public'));
 
   /** Global pipes */
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   /** api doc */
   configSwagger(app);

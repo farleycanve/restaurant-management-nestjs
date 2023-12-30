@@ -1,32 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ObjectIdType, WithTimestamps } from 'common/utils/mongoose';
+import { FoodType, FoodTypeArray } from '../constants';
 
 @Schema({ autoIndex: true, timestamps: true })
 export class Restaurant implements WithTimestamps {
-  @Prop()
+  @Prop({ type: String, required: true })
   url: string;
 
-  @Prop()
-  address: string;
-
-  @Prop()
-  addressLine2: string;
-
-  @Prop()
+  @Prop({ type: String, required: true })
   name: string;
 
-  @Prop()
-  outCode: string;
-
-  @Prop()
-  postcode: string;
-
-  @Prop()
+  @Prop({ type: Number, required: true })
   rating: number;
 
-  @Prop()
-  foodType: string;
+  @Prop({ type: String, enum: FoodTypeArray, required: true })
+  foodType: FoodType;
+
+  @Prop({ type: String, required: true })
+  address: string;
+
+  @Prop({ type: String })
+  addressLine2?: string;
+
+  @Prop({ type: String })
+  outcode?: string;
+
+  @Prop({ type: String })
+  postcode?: string;
 
   createdAt?: Date;
   updatedAt?: Date;

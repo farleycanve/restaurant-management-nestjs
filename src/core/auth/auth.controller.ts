@@ -33,9 +33,9 @@ export class AuthController {
   login(@Request() req) {
     return this.authService.login(req.user);
   }
-  @Post()
+  @Post('register')
   @Public()
-  @Roles(Role.Manager)
+  // @Roles(Role.Manager)
   create(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }

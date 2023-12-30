@@ -19,7 +19,7 @@
         }
       }
     },
-    "/restaurant": {
+    "/restaurants": {
       "post": {
         "operationId": "RestaurantController_create",
         "parameters": [],
@@ -39,31 +39,123 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RestaurantReturnDto"
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Restaurants"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "get": {
         "operationId": "RestaurantController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Default 10",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Default 1",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "foodType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Chinese",
+                "Curry",
+                "Arabic",
+                "African",
+                "Turkish",
+                "Greek",
+                "Kebab",
+                "Moroccan",
+                "Pizza",
+                "Japanese"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "rating",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "operator",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "lesser",
+                "equal",
+                "greater"
+              ],
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Restaurant"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Restaurants"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
-    "/restaurant/{id}": {
+    "/restaurants/{id}": {
       "get": {
         "operationId": "RestaurantController_findOne",
         "parameters": [
@@ -82,12 +174,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RestaurantReturnDto"
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Restaurants"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "patch": {
         "operationId": "RestaurantController_update",
@@ -117,12 +217,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/RestaurantReturnDto"
                 }
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Restaurants"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       },
       "delete": {
         "operationId": "RestaurantController_remove",
@@ -138,16 +246,17 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": ""
           }
-        }
+        },
+        "tags": [
+          "Restaurants"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/auth/login": {
@@ -169,7 +278,7 @@
         ]
       }
     },
-    "/auth": {
+    "/auth/register": {
       "post": {
         "operationId": "AuthController_create",
         "parameters": [],
@@ -203,7 +312,9 @@
             "bearer": []
           }
         ]
-      },
+      }
+    },
+    "/auth": {
       "get": {
         "operationId": "AuthController_findAll",
         "parameters": [],
@@ -391,19 +502,19 @@
     }
   },
   "info": {
-    "title": "Job-Posting API",
-    "description": "RESTful API for use with Job Posting",
+    "title": "Interview API",
+    "description": "RESTful API for use with Interview",
     "version": "2.0",
     "contact": {}
   },
   "tags": [],
   "servers": [
     {
-      "url": "http://localhost:7578",
+      "url": "http://localhost:6868",
       "description": "Local server",
       "variables": {
         "port": {
-          "default": "7578",
+          "default": "6868",
           "description": "The port of the server"
         }
       }
@@ -419,11 +530,256 @@
     "schemas": {
       "CreateRestaurantDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "foodType": {
+            "type": "string",
+            "enum": [
+              "Chinese",
+              "Curry",
+              "Arabic",
+              "African",
+              "Turkish",
+              "Greek",
+              "Kebab",
+              "Moroccan",
+              "Pizza",
+              "Japanese"
+            ]
+          },
+          "address": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "addressLine2": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "outcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "postcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "url",
+          "name",
+          "rating",
+          "foodType",
+          "address"
+        ]
+      },
+      "RestaurantReturnDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "foodType": {
+            "type": "string",
+            "enum": [
+              "Chinese",
+              "Curry",
+              "Arabic",
+              "African",
+              "Turkish",
+              "Greek",
+              "Kebab",
+              "Moroccan",
+              "Pizza",
+              "Japanese"
+            ]
+          },
+          "address": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "outcode": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "name",
+          "rating",
+          "foodType",
+          "address",
+          "addressLine2",
+          "outcode",
+          "postcode"
+        ]
+      },
+      "Restaurant": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "foodType": {
+            "type": "string",
+            "enum": [
+              "Chinese",
+              "Curry",
+              "Arabic",
+              "African",
+              "Turkish",
+              "Greek",
+              "Kebab",
+              "Moroccan",
+              "Pizza",
+              "Japanese"
+            ]
+          },
+          "address": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "outcode": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "name",
+          "rating",
+          "foodType",
+          "address"
+        ]
+      },
+      "PaginatedResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "next": {
+            "type": "number"
+          },
+          "prev": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalCount",
+          "totalPages",
+          "limit",
+          "page"
+        ]
       },
       "UpdateRestaurantDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "foodType": {
+            "type": "string",
+            "enum": [
+              "Chinese",
+              "Curry",
+              "Arabic",
+              "African",
+              "Turkish",
+              "Greek",
+              "Kebab",
+              "Moroccan",
+              "Pizza",
+              "Japanese"
+            ]
+          },
+          "address": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "addressLine2": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          },
+          "outcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "postcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        }
       },
       "CreateUserDto": {
         "type": "object",
