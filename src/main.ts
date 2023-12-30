@@ -5,6 +5,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { configSwagger } from './configs/swagger';
+import helmet from 'helmet';
+import { WinstonModule } from 'nest-winston';
+import { instance } from 'configs/winston.logger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -12,6 +15,7 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
+  app.use(helmet());
 
   const PORT = configService.get<number>('PORT') || 3000;
   app.setGlobalPrefix(configService.get<string>('ROOT'));
@@ -25,6 +29,13 @@ async function bootstrap() {
 
   /** api doc */
   configSwagger(app);
+
+  /** logger */
+  app.useLogger(
+    WinstonModule.createLogger({
+      instance: instance,
+    }),
+  );
 
   await app.listen(PORT, () => {
     console.clear();

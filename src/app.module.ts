@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, Logger } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -9,6 +9,7 @@ import { RestaurantModule } from './core/restaurant/restaurant.module';
 import { AuthModule } from './core/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from 'core/auth/guards';
+import { LoggerMiddleware } from 'middleware/logger.middleware';
 
 const provideGlobalGuards = [
   {
@@ -52,6 +53,10 @@ const provideGlobalGuards = [
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ...provideGlobalGuards],
+  providers: [AppService, Logger, ...provideGlobalGuards],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*'); // Apply the LoggerMiddleware to all routes
+  }
+}
