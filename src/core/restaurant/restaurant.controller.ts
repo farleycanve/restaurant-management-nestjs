@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UseFilters,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -17,9 +19,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from 'common/dtos/return-pagination.dto';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantReturnDto } from './dto/return-restaurant';
+import { TimeoutInterceptor } from 'interceptor/timeout.interceptor';
+import { HttpExceptionFilter } from 'exception-filter/http-exception.filter';
 
 @ApiTags('Restaurants')
 @ApiBearerAuth()
+@UseInterceptors(TimeoutInterceptor)
+@UseFilters(new HttpExceptionFilter())
 @Controller('restaurants')
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}

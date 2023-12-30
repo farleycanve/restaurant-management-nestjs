@@ -9,6 +9,7 @@ import {
   HttpCode,
   UseGuards,
   Request,
+  UseFilters,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Role } from 'common/constants/roles';
@@ -19,9 +20,11 @@ import { LocalAuthGuard } from './guards';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { HttpExceptionFilter } from 'exception-filter/http-exception.filter';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
+@UseFilters(new HttpExceptionFilter())
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -35,7 +38,7 @@ export class AuthController {
   }
   @Post('register')
   @Public()
-  // @Roles(Role.Manager)
+  @Roles(Role.Manager)
   create(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }
